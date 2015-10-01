@@ -23,8 +23,8 @@ fibonacci:
 	@ If R4 == 1 goto .L4 (which returns 1)
 	ble .L4	
 
-	@ R0 = R4 - 1
-	sub r0, r4, #1
+	@ R0 = R4 - 1 (or add 4294967295)
+	add r0, r4, #0xFFFFFFFF
 	@ Recursive call to fibonacci with R4 - 1 as parameter
 	bl fibonacci	
 
