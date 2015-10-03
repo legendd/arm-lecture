@@ -1,4 +1,4 @@
-	.syntax unified
+.syntax unified
 	.arch armv7-a
 	.text
 	.align 2
@@ -11,33 +11,26 @@
 fibonacci:
 	@ ADD/MODIFY CODE BELOW
 	@ PROLOG
-	push {r3, r4, r5, lr}
 
-	@ R4 = R0 - 0 (update flags)
-	@ if(R0 <= 0) goto .L3 (which returns 0)
+	push {r3,r4,r5,r6,lr}
+	@ pre = r3 = -1
+	@ res = r4 = 1
+	@ sum = r5 = 0
 
-	@ Compare R4 wtih 1
-	@ If R4 == 1 goto .L4 (which returns 1)
+	mov r3, #-1
+	mov r4, #1
+	mov r5, #0
+	mov r6, r0 @ mov r6, #1 >>> wrong!
+	
+.loop:
+	add r5, r4, r3
+	mov r3, r4
+	mov r4, r5
+	subs r6, r6, #1
+	it ge
+	bge .loop
 
-	@ R0 = R4 - 1
-	@ Recursive call to fibonacci with R4 - 1 as parameter
-
-	@ R5 = R0
-	@ R0 = R4 - 2
-	@ Recursive call to fibonacci with R4 - 2 as parameter
-
-	@ R0 = R5 + R0 (update flags)
-
-	pop {r3, r4, r5, pc}		@EPILOG
-
-	@ END CODE MODIFICATION
-.L3:
-	mov r0, #0			@ R0 = 0
-	pop {r3, r4, r5, pc}		@ EPILOG
-
-.L4:
-	mov r0, #1			@ R0 = 1
-	pop {r3, r4, r5, pc}		@ EPILOG
-
+	mov r0, r5
+	pop {r3, r4, r5, r6, pc}
 	.size fibonacci, .-fibonacci
 	.end
